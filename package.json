@@ -1,0 +1,18 @@
+{
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@10.14.0",
+  "scripts": {
+    "build": "pnpm --filter @bikariya/* build",
+    "dev": "pnpm -C playground dev",
+    "release": "bumpp -r --no-push -c \"release: v%s\""
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@zinkawaii/eslint-config": "catalog:",
+    "@zinkawaii/tsconfig": "catalog:",
+    "bumpp": "catalog:",
+    "eslint": "catalog:",
+    "zx": "catalog:"
+  }
+}

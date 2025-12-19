@@ -1,0 +1,94 @@
+interface ModalContext {
+    vnode: ComputedRef<VNode>;
+    zIndex: number;
+    duration: number;
+    isOpening: Ref<boolean>;
+    close: ComputedRef<() => void>;
+}
+
+interface UseModalOptions {
+    duration?: number;
+    immediate?: boolean;
+    unique?: boolean;
+}
+
+export const useModalStore = defineStore("modal", () => {
+    const modals = shallowReactive<ModalContext[]>([]);
+
+    function use(render: () => VNode, options: UseModalOptions = {}) {
+        const {
+            duration = 400,
+            immediate = false,
+            unique = false,
+        } = options;
+
+        let ctx: ModalContext;
+
+        /**
+         * 弹窗是否处于显示状态
+         * 此变量用于在弹窗上下文被插入列表时单独地触发各自的 transition 动画，而不是由 transition-group 统一处理
+         */
+        const isOpening = ref(false);
+
+        //立即打开
+        immediate && open();
+
+        function open() {
+            if (unique && indexOf() !== -1) {
+                return;
+            }
+
+            const vnode = computed(render);
+            watchEffect(() => {
+                vnode.value.props = {
+                    onClose: close,
+                    onVnodeMounted() {
+                        isOpening.value = true;
+                    },
+                    ...vnode.value.props,
+                };
+            });
+
+            const last = modals.at(-1);
+            const zIndex = (last?.zIndex ?? 510) + 2;
+
+            ctx = {
+                vnode,
+                zIndex,
+                duration,
+                isOpening,
+                close: computed(() => vnode.value.props?.onClose),
+            };
+
+            modals.push(ctx);
+        }
+
+        async function close() {
+            isOpening.value = false;
+            await delay(duration);
+
+            const i = indexOf();
+            if (i !== -1) {
+                modals.splice(i, 1);
+            }
+        }
+
+        function indexOf() {
+            return modals.indexOf(ctx);
+        }
+
+        return {
+            open,
+            close,
+        };
+    }
+
+    return {
+        modals,
+        use,
+    };
+});
+
+function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

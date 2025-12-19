@@ -1,0 +1,30 @@
+{
+  "name": "@bikariya/modals",
+  "type": "module",
+  "version": "0.0.0",
+  "description": "",
+  "author": "KazariEX",
+  "license": "MIT",
+  "repository": "KazariEX/bikariya",
+  "keywords": [],
+  "exports": {
+    ".": "./dist/index.ts"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "nuxt-module-build build",
+    "dev": "nuxt-module-build build --stub",
+    "prepack": "pnpm run build"
+  },
+  "dependencies": {
+    "@nuxt/kit": "catalog:"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "catalog:"
+  }
+}
