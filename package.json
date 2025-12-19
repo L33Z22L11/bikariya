@@ -5,14 +5,17 @@
   "scripts": {
     "build": "pnpm --filter @bikariya/* build",
     "dev": "pnpm -C playground dev",
+    "dev:prepare": "pnpm --filter @bikariya/* dev:prepare",
     "release": "bumpp -r --no-push -c \"release: v%s\""
   },
   "devDependencies": {
+    "@nuxt/module-builder": "catalog:",
     "@types/node": "catalog:",
     "@zinkawaii/eslint-config": "catalog:",
     "@zinkawaii/tsconfig": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
+    "vue-tsc": "catalog:",
     "zx": "catalog:"
   }
 }

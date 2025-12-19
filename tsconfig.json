@@ -1,6 +1,15 @@
 {
   "references": [
     {
+      "path": "./packages/core/tsconfig.json"
+    },
+    {
+      "path": "./packages/image-viewer/tsconfig.json"
+    },
+    {
+      "path": "./packages/modals/tsconfig.json"
+    },
+    {
       "path": "./playground/tsconfig.json"
     }
   ],

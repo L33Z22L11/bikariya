@@ -12,8 +12,14 @@
     "vue-router": "catalog:"
   },
   "devDependencies": {
+    "@bikariya/image-viewer": "workspace:",
+    "@bikariya/modals": "workspace:",
+    "@nuxt/image": "catalog:",
     "@pinia/nuxt": "catalog:",
+    "@unocss/nuxt": "catalog:",
     "@vueuse/nuxt": "catalog:",
-    "nuxt": "catalog:"
+    "nuxt": "catalog:",
+    "sass-embedded": "catalog:",
+    "unocss": "catalog:"
   }
 }

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    import { overlayClass } from "#build/nuxt-modal.mjs";
+    import { storeToRefs, useModalStore } from "#imports";
 
     const modalStore = useModalStore();
     const { modals } = storeToRefs(modalStore);
@@ -10,7 +10,7 @@
         <transition>
             <div
                 v-if="isOpening.value"
-                :class="overlayClass"
+                class="bikariya-overlay"
                 :style="{ zIndex: zIndex - 1 }"
                 @click="close.value"
             ></div>

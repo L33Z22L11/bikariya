@@ -1,27 +1,24 @@
-import { addImportsDir, addPlugin, addTemplate, createResolver, defineNuxtModule } from "@nuxt/kit";
+import { addComponent, addImportsDir, addTemplate, createResolver, defineNuxtModule } from "@nuxt/kit";
 import packageJson from "../package.json";
 
-export interface ModuleOptions {
-    overlayClass?: string;
-}
-
-export default defineNuxtModule<ModuleOptions>({
+export default defineNuxtModule({
     meta: {
         name: packageJson.name,
-        configKey: "modal",
+        configKey: "modals",
     },
     moduleDependencies: {
-        "@pinia/nuxt": {},
-        "@vueuse/nuxt": {},
-    },
-    defaults: {
-        overlayClass: "bikariya-overlay",
+        "@bikariya/core": {},
     },
     setup(options) {
         const resolver = createResolver(import.meta.url);
 
         addImportsDir(resolver.resolve("runtime/stores"));
-        addPlugin(resolver.resolve("runtime/plugin.ts"));
+
+        addComponent({
+            name: "BikariyaModals",
+            filePath: resolver.resolve("runtime/modals.vue"),
+        });
+
         addTemplate({
             filename: "nuxt-modal.mjs",
             getContents: () => /* TS */`

@@ -1,5 +1,5 @@
 {
-  "name": "@bikariya/modals",
+  "name": "@bikariya/image-viewer",
   "type": "module",
   "version": "0.0.0",
   "description": "",
@@ -22,7 +22,7 @@
     "prepack": "pnpm run build"
   },
   "dependencies": {
-    "@bikariya/core": "workspace:",
+    "@bikariya/modals": "workspace:",
     "@nuxt/kit": "catalog:"
   }
 }

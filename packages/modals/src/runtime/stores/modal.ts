@@ -1,3 +1,8 @@
+/// <reference types="pinia" />
+
+import { promiseTimeout } from "@vueuse/core";
+import { computed, type ComputedRef, defineStore, ref, type Ref, shallowReactive, type VNode, watchEffect } from "#imports";
+
 interface ModalContext {
     vnode: ComputedRef<VNode>;
     zIndex: number;
@@ -65,7 +70,7 @@ export const useModalStore = defineStore("modal", () => {
 
         async function close() {
             isOpening.value = false;
-            await delay(duration);
+            await promiseTimeout(duration);
 
             const i = indexOf();
             if (i !== -1) {
@@ -88,7 +93,3 @@ export const useModalStore = defineStore("modal", () => {
         use,
     };
 });
-
-function delay(ms: number) {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-}
