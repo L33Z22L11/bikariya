@@ -1,9 +1,7 @@
 {
   "private": true,
   "scripts": {
-    "dev": "nuxt dev",
-    "build": "nuxt build",
-    "prepare": "nuxt prepare"
+    "dev": "nuxt dev"
   },
   "dependencies": {
     "@vueuse/core": "catalog:",
