@@ -1,4 +1,4 @@
-import { addComponent, addImportsDir, addTemplate, createResolver, defineNuxtModule } from "@nuxt/kit";
+import { addComponent, addImportsDir, createResolver, defineNuxtModule } from "@nuxt/kit";
 import packageJson from "../package.json";
 
 export default defineNuxtModule({
@@ -9,7 +9,7 @@ export default defineNuxtModule({
     moduleDependencies: {
         "@bikariya/core": {},
     },
-    setup(options) {
+    setup() {
         const resolver = createResolver(import.meta.url);
 
         addImportsDir(resolver.resolve("runtime/stores"));
@@ -17,13 +17,6 @@ export default defineNuxtModule({
         addComponent({
             name: "BikariyaModals",
             filePath: resolver.resolve("runtime/modals.vue"),
-        });
-
-        addTemplate({
-            filename: "nuxt-modal.mjs",
-            getContents: () => /* TS */`
-export const overlayClass = \`${options.overlayClass}\`;
-`.trimStart(),
         });
     },
 });
