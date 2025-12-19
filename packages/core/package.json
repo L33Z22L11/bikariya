@@ -2,7 +2,7 @@
   "name": "@bikariya/core",
   "type": "module",
   "version": "0.0.1",
-  "description": "",
+  "description": "Bikariya for Nuxt",
   "author": "KazariEX",
   "license": "MIT",
   "repository": "KazariEX/bikariya",
