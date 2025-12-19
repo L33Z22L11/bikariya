@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     import type { ImgHTMLAttributes } from "vue";
-    import { LazyImageViewer } from "#components";
+    import { LazyBikariyaImageViewer } from "#components";
 
     defineProps<{
         src: ImgHTMLAttributes["src"];
@@ -10,7 +10,7 @@
     const rootComp = useTemplateRef("root");
     const rootEl = computed<HTMLImageElement>(() => rootComp.value?.imgEl);
 
-    const { open } = modalStore.use(() => h(LazyImageViewer, {
+    const { open } = modalStore.use(() => h(LazyBikariyaImageViewer, {
         target: rootEl.value,
     }));
 </script>
