@@ -6,3 +6,4 @@
 
 - [@bikariya/image-viewer](/packages/image-viewer)：无头图片查看器
 - [@bikariya/modals](/packages/modals)：无头模态框管理
+- [@bikariya/shiki](/packages/shiki): Shiki 集成
