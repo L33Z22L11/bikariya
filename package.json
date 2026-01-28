@@ -1,7 +1,7 @@
 {
   "type": "module",
   "private": true,
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.28.2",
   "scripts": {
     "build": "pnpm --filter @bikariya/* build",
     "dev": "pnpm -C playground dev",
@@ -15,7 +15,6 @@
     "@zinkawaii/tsconfig": "catalog:",
     "bumpp": "catalog:",
     "eslint": "catalog:",
-    "vue-tsc": "catalog:",
-    "zx": "catalog:"
+    "vue-tsc": "catalog:"
   }
 }
