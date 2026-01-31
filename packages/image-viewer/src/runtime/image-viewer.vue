@@ -2,9 +2,26 @@
     import type { BaseTransitionProps } from "vue";
     import { computed, ref, useEventListener, usePointer, useTemplateRef } from "#imports";
 
-    const props = defineProps<{
+    const { target, duration = 400, rate = 0.9, clamp } = defineProps<{
+        /**
+         * 目标 `<img>` 元素
+         */
         target: HTMLImageElement;
+        /**
+         * 过渡动画时长 (ms)
+         * @default 400
+         */
         duration?: number;
+        /**
+         * 放大后占窗口比率
+         * @default 0.9
+         */
+        rate?: number;
+        /**
+         * 是否限制缩放比例
+         * @default false
+         */
+        clamp?: boolean;
         open?: boolean;
     }>();
     const emit = defineEmits<{
@@ -13,13 +30,17 @@
 
     const rootEl = useTemplateRef("root");
 
-    // 放大后占窗口比率
-    const rate = 0.9;
+    // 按下 ESC 键关闭
+    useEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+            emit("close");
+        }
+    });
 
     // 动画配置
     const options = computed<KeyframeAnimationOptions>(() => {
         return {
-            duration: props.duration ?? 400,
+            duration,
             easing: "ease",
             fill: "forwards",
         };
@@ -45,9 +66,7 @@
     const pointers = ref<Record<number, Pointer>>({});
 
     // 双指数据
-    const fingers = computed(() => {
-        return Object.values(pointers.value).slice(0, 2);
-    });
+    const fingers = computed(() => Object.values(pointers.value).slice(0, 2));
 
     // 当前中心位置
     const center = computed(() => getCenter("current"));
@@ -108,12 +127,18 @@
             const top = startRect.top + center.value.y - startCenter.y;
             const finalLeft = left - (center.value.x - left) * (rate - 1);
             const finalTop = top - (center.value.y - top) * (rate - 1);
+            const finalWidth = startRect.width * rate;
+            const finalHeight = startRect.height * rate;
+
+            if (isOverLimit(finalWidth, finalHeight, rate)) {
+                return;
+            }
 
             rootEl.value!.animate({
                 left: finalLeft + "px",
                 top: finalTop + "px",
-                width: startRect.width * rate + "px",
-                height: startRect.height * rate + "px",
+                width: finalWidth + "px",
+                height: finalHeight + "px",
             }, {
                 duration: 0,
                 fill: "forwards",
@@ -143,40 +168,64 @@
         const { left, top, width, height } = rootEl.value!.getBoundingClientRect();
         const finalLeft = left - (event.clientX - left) * (rate - 1);
         const finalTop = top - (event.clientY - top) * (rate - 1);
+        const finalWidth = width * rate;
+        const finalHeight = height * rate;
+
+        if (isOverLimit(finalWidth, finalHeight, rate)) {
+            return;
+        }
 
         rootEl.value!.animate({
             left: finalLeft + "px",
             top: finalTop + "px",
-            width: width * rate + "px",
-            height: height * rate + "px",
+            width: finalWidth + "px",
+            height: finalHeight + "px",
         }, options.value);
     }
 
-    // 按下 ESC 键关闭
-    useEventListener("keydown", (event) => {
-        if (event.key === "Escape") {
-            emit("close");
+    // 鼠标双击时
+    function onDoubleClick(event: MouseEvent) {
+        const { left, top, width, height } = rootEl.value!.getBoundingClientRect();
+        const { size: [coverWidth, coverHeight], advantageSide } = getFitSize("cover");
+
+        if (width < coverWidth && height < coverHeight) {
+            const [finalLeft, finalTop] = advantageSide === "height" ? [
+                `calc(50% - ${Math.round(coverWidth / 2)}px)`,
+                `${top - (event.clientY - top) * (coverHeight / height - 1)}px`,
+            ] : [
+                `${left - (event.clientX - left) * (coverWidth / width - 1)}px`,
+                `calc(50% - ${Math.round(coverHeight / 2)}px)`,
+            ];
+
+            rootEl.value!.animate({
+                left: finalLeft,
+                top: finalTop,
+                width: Math.ceil(coverWidth) + "px",
+                height: Math.ceil(coverHeight) + "px",
+            }, options.value);
         }
-    });
+        else {
+            const { size: [containWidth, containHeight] } = getFitSize("contain");
+
+            rootEl.value!.animate({
+                left: `calc(50% - ${Math.round(containWidth / 2)}px)`,
+                top: `calc(50% - ${Math.round(containHeight / 2)}px)`,
+                width: Math.floor(containWidth) + "px",
+                height: Math.floor(containHeight) + "px",
+            }, options.value);
+        }
+    }
 
     // 打开时
     const onEnter: BaseTransitionProps<HTMLImageElement>["onEnter"] = (el) => {
-        // 最大宽高
-        const fixedWidth = window.innerWidth * rate;
-        const fixedHeight = window.innerHeight * rate;
-
-        // 最终宽高
-        const naturalRatio = props.target.naturalWidth / props.target.naturalHeight;
-        const [finalWidth, finalHeight] = (fixedWidth / fixedHeight > naturalRatio)
-            ? [fixedHeight * naturalRatio, fixedHeight]
-            : [fixedWidth, fixedWidth / naturalRatio];
+        const { size: [containWidth, containHeight] } = getFitSize("contain");
 
         // 移动至屏幕中心
         el.animate([getOriginalKeyframe(), {
-            top: `calc(50% - ${Math.floor(finalHeight / 2)}px)`,
-            left: `calc(50% - ${Math.floor(finalWidth / 2)}px)`,
-            width: Math.floor(finalWidth) + "px",
-            height: Math.floor(finalHeight) + "px",
+            top: `calc(50% - ${Math.round(containHeight / 2)}px)`,
+            left: `calc(50% - ${Math.round(containWidth / 2)}px)`,
+            width: Math.floor(containWidth) + "px",
+            height: Math.floor(containHeight) + "px",
             clipPath: "inset(0)",
         }], options.value);
     };
@@ -196,11 +245,26 @@
         animation.addEventListener("finish", done);
     };
 
+    // 获取适应尺寸
+    function getFitSize(mode: "contain" | "cover") {
+        const fixedWidth = window.innerWidth * rate;
+        const fixedHeight = window.innerHeight * rate;
+        const naturalRatio = target.naturalWidth / target.naturalHeight;
+        const advantageSide = fixedWidth / fixedHeight > naturalRatio ? "height" : "width";
+
+        return {
+            size: +(advantageSide === "height") ^ +(mode === "cover")
+                ? [fixedHeight * naturalRatio, fixedHeight]
+                : [fixedWidth, fixedWidth / naturalRatio],
+            advantageSide,
+        };
+    }
+
     // 获取原始位置动画帧
     function getOriginalKeyframe(x = 0, y = 0) {
-        const { left, top, width, height } = props.target.getBoundingClientRect();
-        const { naturalWidth, naturalHeight } = props.target;
-        const { objectPosition } = getComputedStyle(props.target);
+        const { left, top, width, height } = target.getBoundingClientRect();
+        const { naturalWidth, naturalHeight } = target;
+        const { objectPosition } = getComputedStyle(target);
         const [horizontal, vertical] = objectPosition.split(" ").map((pos) => Number(pos.slice(0, -1)) / 100);
 
         const ratio = width / height;
@@ -230,6 +294,21 @@
             clipPath: `inset(${clipTop}px ${clipRight}px ${clipBottom}px ${clipLeft}px)`,
         };
     }
+
+    // 尺寸是否超出限制
+    function isOverLimit(width: number, height: number, rate: number) {
+        if (!clamp) {
+            return false;
+        }
+        if (rate > 1) {
+            return width > Math.max(window.innerWidth, target.width, target.naturalWidth)
+                && height > Math.max(window.innerHeight, target.height, target.naturalHeight);
+        }
+        else {
+            return width < Math.min(window.innerWidth, target.width, target.naturalWidth)
+                && height < Math.min(window.innerHeight, target.height, target.naturalHeight);
+        }
+    }
 </script>
 
 <template>
@@ -240,6 +319,7 @@
             class="bikariya-image-viewer"
             :src="target.src"
             :draggable="false"
+            @dblclick="onDoubleClick"
             @wheel.prevent="onWheel"
         />
     </transition>

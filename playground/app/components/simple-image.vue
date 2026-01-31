@@ -12,6 +12,7 @@
 
     const { open } = modalStore.use(() => h(LazyBikariyaImageViewer, {
         target: rootEl.value,
+        clamp: true,
     }));
 </script>
 
