@@ -7,7 +7,7 @@ interface ModalContext {
     vnode: ComputedRef<VNode>;
     zIndex: number;
     duration: number;
-    isOpening: Ref<boolean>;
+    open: Ref<boolean>;
     close: ComputedRef<() => void>;
 }
 
@@ -61,7 +61,7 @@ export const useModalStore = defineStore("modal", () => {
                 vnode,
                 zIndex,
                 duration,
-                isOpening,
+                open: isOpening,
                 close: computed(() => vnode.value.props?.onClose),
             };
 

@@ -33,7 +33,7 @@ pnpm i -D @bikariya/modals
    ```vue
    <script lang="ts" setup>
      defineProps<{
-       isOpening?: boolean;
+       open?: boolean;
      }>();
 
      defineEmits<{
@@ -43,7 +43,7 @@ pnpm i -D @bikariya/modals
 
    <template>
      <transition>
-       <div v-if="isOpening">
+       <div v-if="open">
          <span>I'm a modal.</span>
          <button @click="$emit(`close`)">Close</button>
        </div>

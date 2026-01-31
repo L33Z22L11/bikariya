@@ -5,7 +5,7 @@
     const props = defineProps<{
         target: HTMLImageElement;
         duration?: number;
-        isOpening?: boolean;
+        open?: boolean;
     }>();
     const emit = defineEmits<{
         close: [];
@@ -235,7 +235,7 @@
 <template>
     <transition @enter="onEnter" @leave="onLeave">
         <img
-            v-if="isOpening"
+            v-if="open"
             ref="root"
             class="bikariya-image-viewer"
             :src="target.src"
