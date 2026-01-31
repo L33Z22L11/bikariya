@@ -1,4 +1,4 @@
-import { addImportsDir, createResolver, defineNuxtModule } from "@nuxt/kit";
+import { addImportsSources, createResolver, defineNuxtModule } from "@nuxt/kit";
 import packageJson from "../package.json";
 
 export default defineNuxtModule({
@@ -12,7 +12,12 @@ export default defineNuxtModule({
     setup(options, nuxt) {
         const resolver = createResolver(import.meta.url);
 
-        addImportsDir(resolver.resolve("runtime/stores"));
+        addImportsSources({
+            from: resolver.resolve("runtime/store"),
+            imports: [
+                "useShikiStore",
+            ],
+        });
 
         nuxt.options.alias["#shiki/config"] = resolver.resolve("runtime/config");
     },

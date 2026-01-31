@@ -1,4 +1,4 @@
-import { addComponent, addImportsDir, createResolver, defineNuxtModule } from "@nuxt/kit";
+import { addComponent, addImportsSources, createResolver, defineNuxtModule } from "@nuxt/kit";
 import packageJson from "../package.json";
 
 export default defineNuxtModule({
@@ -12,7 +12,12 @@ export default defineNuxtModule({
     setup() {
         const resolver = createResolver(import.meta.url);
 
-        addImportsDir(resolver.resolve("runtime/stores"));
+        addImportsSources({
+            from: resolver.resolve("runtime/store"),
+            imports: [
+                "useModalStore",
+            ],
+        });
 
         addComponent({
             name: "BikariyaModals",

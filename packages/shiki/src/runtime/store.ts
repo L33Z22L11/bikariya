@@ -4,7 +4,7 @@ import type { BundledLanguage, CodeToHastOptions, HighlighterCore, RegexEngine }
 import { defineStore, onScopeDispose } from "#imports";
 // @ts-expect-error TS2307
 import untyped from "~/shiki.config";
-import type { Config } from "../config";
+import type { Config } from "./config";
 
 export const useShikiStore = defineStore("shiki", () => {
     let promise: Promise<HighlighterCore> | undefined;
