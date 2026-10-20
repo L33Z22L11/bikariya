@@ -1,36 +1,37 @@
-shamefullyHoist: true
-shellEmulator: true
+minimumReleaseAge: 0
+
 trustPolicy: no-downgrade
 trustPolicyExclude:
-  - chokidar@4.0.3
   - semver@6.3.1
+
+shamefullyHoist: true
+shellEmulator: true
 
 packages:
   - packages/*
   - playground
 
-catalog:
-  "@nuxt/image": ^2.0.0
-  "@nuxt/kit": ^4.3.1
-  "@nuxt/module-builder": ^1.0.2
-  "@pinia/nuxt": ^0.11.3
-  "@types/node": ^25.3.0
-  "@unocss/nuxt": ^66.6.1
-  "@vueuse/core": ^14.2.1
-  "@vueuse/nuxt": ^14.2.1
-  "@zinkawaii/eslint-config": ^0.4.2
-  "@zinkawaii/tsconfig": ^0.0.2
-  bumpp: ^10.4.1
-  eslint: ^10.0.2
-  nuxt: ^4.3.1
-  pinia: ^3.0.4
-  shiki: ^3.23.0
-  unocss: ^66.6.1
-  vue: ^3.5.29
-  vue-router: ^4.6.4
-  vue-tsc: ^3.2.5
+allowBuilds:
+  esbuild: true
 
-onlyBuiltDependencies:
-  - "@parcel/watcher"
-  - esbuild
-  - sharp
+catalog:
+  "@nuxt/image": ^2.2.0
+  "@nuxt/kit": ^4.6.2
+  "@nuxt/module-builder": ^1.0.3
+  "@pinia/nuxt": ^1.0.3
+  "@types/node": ^26.6.5
+  "@unocss/nuxt": ^66.11.0
+  "@vueuse/core": ^15.0.0
+  "@vueuse/nuxt": ^15.0.0
+  "@zinkawaii/eslint-config": ^0.5.4
+  "@zinkawaii/eslint-config-css": ^0.5.4
+  "@zinkawaii/tsconfig": ^0.1.0
+  bumpp: ^12.3.0
+  eslint: ^10.13.0
+  nuxt: ^4.6.2
+  pinia: ^4.1.0
+  shiki: ^4.5.0
+  unocss: ^66.11.0
+  vue: ^3.5.44
+  vue-router: ^5.4.0
+  vue-tsc: ^3.3.13

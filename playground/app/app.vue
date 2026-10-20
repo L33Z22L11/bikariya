@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-    const code = `
+  const code = `
 export default defineConfig({
     themes: {
         light: () => import("..."),
@@ -10,35 +10,35 @@ export default defineConfig({
 </script>
 
 <template>
-    <div overflow="hidden" size="80">
-        <simple-image size="100%" object="cover" src="https://picsum.photos/seed/picsum/800/400"/>
-    </div>
-    <div leading="normal">
-        <simple-shiki :raw="code"/>
-    </div>
-    <bikariya-modals />
+  <div overflow="hidden" size="80">
+    <simple-image size="100%" object="cover" src="https://picsum.photos/seed/picsum/800/400"/>
+  </div>
+  <div leading="normal">
+    <simple-shiki :raw="code"/>
+  </div>
+  <bikariya-modals />
 </template>
 
 <style>
-    *, ::before, ::after {
-        padding: 0;
-        margin: 0;
-        border: none;
-        box-sizing: border-box;
+  *, ::before, ::after {
+    margin: 0;
+    padding: 0;
+    border: none;
+    box-sizing: border-box;
+  }
+
+  .bikariya-overlay {
+    position: fixed;
+    opacity: 0.5;
+    inset: 0;
+    background-color: black;
+
+    &:where(.v-enter-active, .v-leave-active) {
+      transition: opacity 0.4s;
     }
 
-    .bikariya-overlay {
-        position: fixed;
-        opacity: 0.5;
-        inset: 0;
-        background-color: black;
-
-        &:where(.v-enter-active, .v-leave-active) {
-            transition: opacity 0.4s;
-        }
-
-        &:where(.v-enter-from, .v-leave-to) {
-            opacity: 0;
-        }
+    &:where(.v-enter-from, .v-leave-to) {
+      opacity: 0;
     }
+  }
 </style>
